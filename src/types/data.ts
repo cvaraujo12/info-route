@@ -5,7 +5,6 @@ export interface CountryData {
   projectCount: number
   totalInvestment: number
   coordinates: [number, number]
-  keyProjects: Project[]
   stats: {
     gdpImpact: number
     jobsCreated: number
@@ -16,8 +15,8 @@ export interface CountryData {
 export interface Project {
   id: string
   name: string
-  type: 'infrastructure' | 'energy' | 'transport' | 'digital' | 'other'
-  status: 'planned' | 'ongoing' | 'completed'
+  type: string
+  status: string
   investment: number
   startYear: number
   completionYear?: number
@@ -26,53 +25,64 @@ export interface Project {
     country: string
     coordinates: [number, number]
   }
-  impacts: {
-    economic: string[]
-    social: string[]
-    environmental: string[]
-  }
   timeline: {
     year: number
     event: string
   }[]
-  relatedRoute?: string
+  impacts: {
+    economic: number
+    social: number
+    environmental: number
+  }
 }
 
 export interface TradeData {
   year: number
-  volume: number
-  countries: {
-    name: string
-    value: number
-  }[]
+  values: {
+    total: number
+    byRegion: {
+      [key: string]: number
+    }
+  }
+  type: string
+  regions: {
+    asia: string
+    africa: string
+    europe: string
+    americas: string
+  }
 }
 
 export interface InvestmentData {
   year: number
-  total: number
+  values: {
+    total: number
+    byRegion: {
+      [key: string]: number
+    }
+  }
   sectors: {
-    name: string
-    value: number
-  }[]
+    [key: string]: number
+  }
   regions: {
-    name: string
-    value: number
-  }[]
+    [key: string]: number
+  }
 }
 
 export interface EnvironmentalData {
   year: number
-  metrics: {
-    carbonReduction: number
-    renewableEnergy: number
-    greenInvestment: number
+  emissions: {
+    total: number
+    byRegion: {
+      [key: string]: number
+    }
   }
-  initiatives: {
-    name: string
-    investment: number
-    description: string
-    impacts: string[]
-  }[]
+  regions: {
+    asia: string
+    africa: string
+    europe: string
+    americas: string
+  }
 }
 
 export interface LandRoute {

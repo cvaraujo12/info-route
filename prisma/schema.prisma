@@ -1,0 +1,101 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Project {
+  id             String   @id @default(cuid())
+  name           String
+  type           String
+  status         String
+  investment     Float
+  startYear      Int
+  completionYear Int
+  description    String
+  countryId      String
+  country        Country  @relation(fields: [countryId], references: [id])
+  timeline       Timeline[]
+  impacts        Impact[]
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Country {
+  id              String    @id @default(cuid())
+  name            String
+  region          String
+  projectCount    Int
+  totalInvestment Float
+  coordinates     Float[]
+  projects        Project[]
+  stats           Stats?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model Timeline {
+  id        String   @id @default(cuid())
+  year      Int
+  event     String
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Impact {
+  id          String   @id @default(cuid())
+  type        String
+  value       Float
+  description String
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Stats {
+  id           String   @id @default(cuid())
+  gdpImpact    Float
+  jobsCreated  Int
+  tradeVolume  Float
+  countryId    String   @unique
+  country      Country  @relation(fields: [countryId], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model TradeData {
+  id        String   @id @default(cuid())
+  year      Int
+  value     Float
+  type      String
+  region    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model InvestmentData {
+  id        String   @id @default(cuid())
+  year      Int
+  value     Float
+  sector    String
+  region    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model EnvironmentalData {
+  id          String   @id @default(cuid())
+  year        Int
+  type        String
+  value       Float
+  description String
+  region      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+} 

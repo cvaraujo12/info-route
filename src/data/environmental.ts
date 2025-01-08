@@ -1,34 +1,58 @@
-import { EnvironmentalData } from "@/types/data"
+import { EnvironmentalData } from '@/types/data'
 
 export const environmentalData: EnvironmentalData[] = [
   {
-    year: 2023,
-    metrics: {
-      carbonReduction: 15000000, // toneladas de CO2
-      renewableEnergy: 35, // percentual de energia renovável
-      greenInvestment: 150000000000 // investimento em projetos verdes
-    },
-    initiatives: [
-      {
-        name: "Green Silk Road",
-        investment: 50000000000,
-        description: "Iniciativa para desenvolvimento sustentável",
-        impacts: [
-          "Redução de 20% nas emissões de carbono",
-          "Implementação de 1000 MW em energia renovável",
-          "Preservação de 500.000 hectares de áreas verdes"
-        ]
-      },
-      {
-        name: "Sustainable Transport Corridor",
-        investment: 35000000000,
-        description: "Corredores de transporte com baixa emissão",
-        impacts: [
-          "Redução de 30% no consumo de combustível",
-          "Implementação de 2000 km de ferrovias elétricas",
-          "Modernização de 50 portos com tecnologia verde"
-        ]
+    year: 2020,
+    emissions: {
+      total: 1200000,
+      byRegion: {
+        asia: 600000,
+        europe: 300000,
+        africa: 200000,
+        americas: 100000
       }
-    ]
+    },
+    regions: {
+      asia: 'Ásia',
+      africa: 'África',
+      europe: 'Europa',
+      americas: 'Américas'
+    }
+  },
+  {
+    year: 2021,
+    emissions: {
+      total: 1100000,
+      byRegion: {
+        asia: 550000,
+        europe: 275000,
+        africa: 175000,
+        americas: 100000
+      }
+    },
+    regions: {
+      asia: 'Ásia',
+      africa: 'África',
+      europe: 'Europa',
+      americas: 'Américas'
+    }
+  },
+  {
+    year: 2022,
+    emissions: {
+      total: 1000000,
+      byRegion: {
+        asia: 500000,
+        europe: 250000,
+        africa: 150000,
+        americas: 100000
+      }
+    },
+    regions: {
+      asia: 'Ásia',
+      africa: 'África',
+      europe: 'Europa',
+      americas: 'Américas'
+    }
   }
 ] 
