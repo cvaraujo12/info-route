@@ -12,14 +12,14 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
-    "@prisma/client": "5.22.0",
+    "@prisma/client": "5.7.1",
     "@radix-ui/react-dialog": "1.0.5",
     "@radix-ui/react-dropdown-menu": "2.0.6",
     "@radix-ui/react-label": "2.0.2",
     "@radix-ui/react-slot": "1.0.2",
     "class-variance-authority": "0.7.0",
     "clsx": "2.0.0",
-    "framer-motion": "10.18.0",
+    "framer-motion": "10.16.16",
     "leaflet": "1.9.4",
     "lucide-react": "0.302.0",
     "next": "14.0.4",
@@ -42,8 +42,8 @@
     "eslint-config-next": "14.0.4",
     "husky": "8.0.3",
     "postcss": "8.4.32",
-    "prettier": "3.4.2",
-    "prisma": "5.22.0",
+    "prettier": "3.1.1",
+    "prisma": "5.7.1",
     "tailwindcss": "3.4.0",
     "typescript": "5.3.3"
   }
