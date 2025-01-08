@@ -8,62 +8,71 @@ on:
     branches:
       - main
 
+env:
+  NODE_VERSION: '18'
+  NPM_CONFIG_LEGACY_PEER_DEPS: true
+  NPM_CONFIG_PACKAGE_LOCK: false
+
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
     permissions:
       contents: write
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
           ref: ${{ github.head_ref }}
 
-      - name: Setup Node.js
+      - name: Setup Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: ${{ env.NODE_VERSION }}
 
-      - name: Clean npm cache
+      - name: Clean environment
         run: |
+          echo "Cleaning npm cache and removing old files..."
           npm cache clean --force
-          rm -rf node_modules
-          rm -f package-lock.json
+          rm -rf node_modules package-lock.json
 
       - name: Install dependencies
         run: |
           echo "Installing dependencies..."
-          npm install --legacy-peer-deps --no-package-lock
+          npm install
           echo "Dependencies installed successfully"
 
-      - name: Generate Prisma Client
-        run: npx prisma generate
+      - name: Setup Prisma
+        run: |
+          echo "Generating Prisma Client..."
+          npx prisma generate
+          echo "Prisma Client generated successfully"
 
-      - name: Run linting
-        run: npm run lint
-
-      - name: Run type checking
-        run: npm run build --if-present
-
-      - name: Run tests
-        run: npm run test --if-present
+      - name: Build and test
+        run: |
+          echo "Running lint..."
+          npm run lint
+          echo "Running build..."
+          npm run build
+          echo "Running tests..."
+          npm run test --if-present
 
       - name: Check formatting
-        run: npm run format --check
-
-      - name: Configure Git
         run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
+          echo "Checking code formatting..."
+          npm run format --check
 
-      - name: Commit package-lock.json
+      - name: Commit changes
+        if: github.ref == 'refs/heads/main'
         run: |
           if [[ -n "$(git status --porcelain)" ]]; then
-            echo "Changes detected in files"
+            echo "Changes detected, committing..."
+            git config --local user.email "github-actions[bot]@users.noreply.github.com"
+            git config --local user.name "github-actions[bot]"
             git add .
             git commit -m "chore: update dependencies [skip ci]"
             git push
           else
-            echo "No changes detected"
+            echo "No changes to commit"
           fi 

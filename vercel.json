@@ -2,7 +2,7 @@
   "version": 2,
   "buildCommand": "npm run vercel-build",
   "devCommand": "npm run dev",
-  "installCommand": "npm cache clean --force && npm install --legacy-peer-deps --no-package-lock",
+  "installCommand": "rm -rf node_modules package-lock.json && npm install",
   "framework": "nextjs",
   "regions": ["gru1"],
   "git": {
@@ -13,7 +13,8 @@
   "env": {
     "NEXT_PUBLIC_API_URL": "production-url",
     "PRISMA_SKIP_POSTINSTALL": "1",
-    "NPM_FLAGS": "--legacy-peer-deps --no-package-lock",
+    "NPM_CONFIG_LEGACY_PEER_DEPS": "true",
+    "NPM_CONFIG_PACKAGE_LOCK": "false",
     "NODE_ENV": "production"
   },
   "headers": [
