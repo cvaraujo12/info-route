@@ -1,39 +1,11 @@
 {
   "version": 2,
-  "buildCommand": "npm run build",
-  "devCommand": "npm run dev",
-  "installCommand": "npm install",
   "framework": "nextjs",
   "regions": ["gru1"],
-  "git": {
-    "deploymentEnabled": {
-      "main": true
-    }
-  },
+  "buildCommand": "npm run build",
+  "installCommand": "npm install",
   "env": {
     "NEXT_PUBLIC_API_URL": "production-url",
-    "PRISMA_SKIP_POSTINSTALL": "1",
-    "NPM_CONFIG_LEGACY_PEER_DEPS": "true",
-    "NODE_ENV": "production",
-    "DATABASE_URL": "postgresql://postgres:postgres@localhost:5432/info_route?schema=public"
-  },
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        },
-        {
-          "key": "X-Frame-Options",
-          "value": "DENY"
-        },
-        {
-          "key": "X-XSS-Protection",
-          "value": "1; mode=block"
-        }
-      ]
-    }
-  ]
+    "NODE_ENV": "production"
+  }
 } 
