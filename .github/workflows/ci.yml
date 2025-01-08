@@ -24,15 +24,21 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-          cache: 'npm'
+
+      - name: Clean npm cache
+        run: |
+          npm cache clean --force
+          rm -rf node_modules
+          rm -f package-lock.json
 
       - name: Install dependencies
         run: |
-          echo "Removing old package-lock.json..."
-          rm -f package-lock.json
           echo "Installing dependencies..."
-          npm install --legacy-peer-deps
+          npm install --legacy-peer-deps --no-package-lock
           echo "Dependencies installed successfully"
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
 
       - name: Run linting
         run: npm run lint
@@ -53,11 +59,11 @@ jobs:
 
       - name: Commit package-lock.json
         run: |
-          if [[ -n "$(git status --porcelain package-lock.json)" ]]; then
-            echo "Changes detected in package-lock.json"
-            git add package-lock.json
-            git commit -m "chore: update package-lock.json [skip ci]"
+          if [[ -n "$(git status --porcelain)" ]]; then
+            echo "Changes detected in files"
+            git add .
+            git commit -m "chore: update dependencies [skip ci]"
             git push
           else
-            echo "No changes in package-lock.json"
+            echo "No changes detected"
           fi 
