@@ -14,7 +14,8 @@
     "NEXT_PUBLIC_API_URL": "production-url",
     "PRISMA_SKIP_POSTINSTALL": "1",
     "NPM_CONFIG_LEGACY_PEER_DEPS": "true",
-    "NODE_ENV": "production"
+    "NODE_ENV": "production",
+    "DATABASE_URL": "postgresql://postgres:postgres@localhost:5432/info_route?schema=public"
   },
   "headers": [
     {
