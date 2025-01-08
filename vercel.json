@@ -2,7 +2,7 @@
   "version": 2,
   "buildCommand": "npm run vercel-build",
   "devCommand": "npm run dev",
-  "installCommand": "npm install",
+  "installCommand": "npm install --no-package-lock",
   "framework": "nextjs",
   "regions": ["gru1"],
   "git": {
@@ -11,7 +11,8 @@
     }
   },
   "env": {
-    "NEXT_PUBLIC_API_URL": "production-url"
+    "NEXT_PUBLIC_API_URL": "production-url",
+    "PRISMA_SKIP_POSTINSTALL": "1"
   },
   "headers": [
     {

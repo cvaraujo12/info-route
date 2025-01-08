@@ -21,8 +21,10 @@ jobs:
           node-version: '18'
           cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Clean install dependencies
+        run: |
+          rm -f package-lock.json
+          npm install
 
       - name: Run linting
         run: npm run lint
@@ -34,4 +36,14 @@ jobs:
         run: npm run test --if-present
 
       - name: Check formatting
-        run: npm run format --check 
+        run: npm run format --check
+
+      - name: Commit package-lock.json if changed
+        run: |
+          if [[ -n "$(git status --porcelain package-lock.json)" ]]; then
+            git config --local user.email "action@github.com"
+            git config --local user.name "GitHub Action"
+            git add package-lock.json
+            git commit -m "chore: update package-lock.json"
+            git push
+          fi 
