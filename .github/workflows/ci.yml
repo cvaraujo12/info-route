@@ -11,9 +11,14 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ github.head_ref }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -21,10 +26,13 @@ jobs:
           node-version: '18'
           cache: 'npm'
 
-      - name: Clean install dependencies
+      - name: Install dependencies
         run: |
+          echo "Removing old package-lock.json..."
           rm -f package-lock.json
-          npm install
+          echo "Installing dependencies..."
+          npm install --legacy-peer-deps
+          echo "Dependencies installed successfully"
 
       - name: Run linting
         run: npm run lint
@@ -38,12 +46,18 @@ jobs:
       - name: Check formatting
         run: npm run format --check
 
-      - name: Commit package-lock.json if changed
+      - name: Configure Git
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+
+      - name: Commit package-lock.json
         run: |
           if [[ -n "$(git status --porcelain package-lock.json)" ]]; then
-            git config --local user.email "action@github.com"
-            git config --local user.name "GitHub Action"
+            echo "Changes detected in package-lock.json"
             git add package-lock.json
-            git commit -m "chore: update package-lock.json"
+            git commit -m "chore: update package-lock.json [skip ci]"
             git push
+          else
+            echo "No changes in package-lock.json"
           fi 
