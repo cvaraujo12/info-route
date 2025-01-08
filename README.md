@@ -1,36 +1,80 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Info Route
 
-## Getting Started
+Plataforma de informações sobre a Nova Rota da Seda (Belt and Road Initiative), fornecendo dados atualizados sobre projetos, investimentos e impactos desta iniciativa global.
 
-First, run the development server:
+## Tecnologias
+
+- Next.js 14
+- TypeScript
+- TailwindCSS
+- Shadcn UI
+- React Leaflet
+- Recharts
+
+## Funcionalidades
+
+- 🗺️ Mapa interativo com projetos e rotas
+- 📊 Visualização de dados e estatísticas
+- 📱 Design responsivo
+- 🌐 Informações em tempo real
+- 📈 Gráficos e análises
+
+## Pré-requisitos
+
+- Node.js 18+ 
+- npm ou yarn
+
+## Instalação
 
 ```bash
+# Clone o repositório
+git clone https://github.com/seu-usuario/info-route.git
+
+# Entre no diretório
+cd info-route
+
+# Instale as dependências
+npm install
+
+# Inicie o servidor de desenvolvimento
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Scripts Disponíveis
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- `npm run dev` - Inicia o servidor de desenvolvimento
+- `npm run build` - Cria a build de produção
+- `npm start` - Inicia o servidor de produção
+- `npm run lint` - Executa o linter
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Estrutura do Projeto
 
-## Learn More
+```
+info-route/
+├── src/
+│   ├── app/            # Páginas e layouts
+│   ├── components/     # Componentes React
+│   ├── contexts/       # Contextos React
+│   ├── hooks/          # Hooks personalizados
+│   ├── types/          # Tipos TypeScript
+│   ├── utils/          # Funções utilitárias
+│   └── data/          # Dados mockados
+├── public/            # Arquivos estáticos
+└── ...
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Deploy
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+O projeto está configurado para deploy automático na Vercel. Cada push na branch `main` aciona um novo deploy.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Contribuição
 
-## Deploy on Vercel
+1. Faça um fork do projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/nova-feature`)
+3. Faça commit das alterações (`git commit -m 'Adiciona nova feature'`)
+4. Faça push para a branch (`git push origin feature/nova-feature`)
+5. Abra um Pull Request
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Licença
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.

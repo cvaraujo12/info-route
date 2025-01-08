@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "Info Route",
+  "version": "1.0.0",
+  "description": "Uma plataforma dedicada a fornecer informações atualizadas sobre a Nova Rota da Seda",
+  "permissions": [
+    "storage",
+    "activeTab"
+  ],
+  "action": {
+    "default_popup": "popup/index.html"
+  },
+  "background": {
+    "service_worker": "background/index.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content/index.js"]
+    }
+  ],
+  "options_page": "options/index.html"
+} 
