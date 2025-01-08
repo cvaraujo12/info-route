@@ -1,61 +1,21 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-generator client {
-  provider = "prisma-client-js"
-}
-
-model Project {
-  id             String   @id @default(cuid())
-  name           String
-  type           String
-  status         String
-  investment     Float
-  startYear      Int
-  completionYear Int
-  description    String
-  countryId      String
-  country        Country  @relation(fields: [countryId], references: [id])
-  timeline       Timeline[]
-  impacts        Impact[]
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-}
-
 model Country {
-  id              String    @id @default(cuid())
+  id              String    @id
   name            String
   region          String
-  projectCount    Int
-  totalInvestment Float
   coordinates     Float[]
-  projects        Project[]
+  projects        Int       @default(0)
+  investment      Float     @default(0)
   stats           Stats?
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-}
-
-model Timeline {
-  id        String   @id @default(cuid())
-  year      Int
-  event     String
-  projectId String
-  project   Project  @relation(fields: [projectId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Impact {
-  id          String   @id @default(cuid())
-  type        String
-  value       Float
-  description String
-  projectId   String
-  project     Project  @relation(fields: [projectId], references: [id])
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  projectsList    Project[]
 }
 
 model Stats {
@@ -63,30 +23,28 @@ model Stats {
   gdpImpact    Float
   jobsCreated  Int
   tradeVolume  Float
-  countryId    String   @unique
   country      Country  @relation(fields: [countryId], references: [id])
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  countryId    String   @unique
 }
 
-model TradeData {
-  id        String   @id @default(cuid())
-  year      Int
-  value     Float
-  type      String
-  region    String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Project {
+  id            String   @id
+  name          String
+  type          String
+  status        String
+  value         Float    @default(0)
+  startDate     String   @default("2024-01-01")
+  endDate       String?
+  country       Country  @relation(fields: [countryId], references: [id])
+  countryId     String
 }
 
-model InvestmentData {
-  id        String   @id @default(cuid())
-  year      Int
-  value     Float
-  sector    String
-  region    String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Statistics {
+  id                String   @id @default("main")
+  totalInvestment   Float
+  totalProjects     Int
+  countriesInvolved Int
+  lastUpdated       String
 }
 
 model EnvironmentalData {
@@ -96,6 +54,4 @@ model EnvironmentalData {
   value       Float
   description String
   region      String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
 } 

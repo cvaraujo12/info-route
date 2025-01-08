@@ -2,57 +2,27 @@ import { EnvironmentalData } from '@/types/data'
 
 export const environmentalData: EnvironmentalData[] = [
   {
+    id: 'ENV-2020',
     year: 2020,
-    emissions: {
-      total: 1200000,
-      byRegion: {
-        asia: 600000,
-        europe: 300000,
-        africa: 200000,
-        americas: 100000
-      }
-    },
-    regions: {
-      asia: 'Ásia',
-      africa: 'África',
-      europe: 'Europa',
-      americas: 'Américas'
-    }
+    type: 'emissions',
+    value: 850000000,
+    description: 'Total CO2 emissions from BRI projects',
+    region: 'Asia'
   },
   {
+    id: 'ENV-2021',
     year: 2021,
-    emissions: {
-      total: 1100000,
-      byRegion: {
-        asia: 550000,
-        europe: 275000,
-        africa: 175000,
-        americas: 100000
-      }
-    },
-    regions: {
-      asia: 'Ásia',
-      africa: 'África',
-      europe: 'Europa',
-      americas: 'Américas'
-    }
+    type: 'emissions',
+    value: 920000000,
+    description: 'Total CO2 emissions from BRI projects',
+    region: 'Asia'
   },
   {
+    id: 'ENV-2022',
     year: 2022,
-    emissions: {
-      total: 1000000,
-      byRegion: {
-        asia: 500000,
-        europe: 250000,
-        africa: 150000,
-        americas: 100000
-      }
-    },
-    regions: {
-      asia: 'Ásia',
-      africa: 'África',
-      europe: 'Europa',
-      americas: 'Américas'
-    }
+    type: 'emissions',
+    value: 980000000,
+    description: 'Total CO2 emissions from BRI projects',
+    region: 'Asia'
   }
 ] 

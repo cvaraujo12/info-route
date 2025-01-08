@@ -1,34 +1,45 @@
 import { PrismaClient } from '@prisma/client'
 import { countries } from '../src/data/countries'
 import { projects } from '../src/data/projects'
-import { tradeData, investmentData } from '../src/data/statistics'
+import { statistics } from '../src/data/statistics'
 import { environmentalData } from '../src/data/environmental'
+import type { CountryData, Project, EnvironmentalData } from '../src/types/data'
 
 const prisma = new PrismaClient()
 
 async function main() {
-  // Limpar dados existentes
-  await prisma.$transaction([
-    prisma.impact.deleteMany(),
-    prisma.timeline.deleteMany(),
-    prisma.stats.deleteMany(),
-    prisma.project.deleteMany(),
-    prisma.country.deleteMany(),
-    prisma.tradeData.deleteMany(),
-    prisma.investmentData.deleteMany(),
-    prisma.environmentalData.deleteMany(),
-  ])
-
-  // Inserir países
-  for (const country of countries) {
-    await prisma.country.create({
-      data: {
+  // Seed countries
+  for (const country of countries as CountryData[]) {
+    await prisma.country.upsert({
+      where: { id: country.id },
+      update: {
+        name: country.name,
+        region: country.region,
+        coordinates: country.coordinates,
+        projects: country.projects,
+        investment: country.investment,
+        stats: {
+          upsert: {
+            create: {
+              gdpImpact: country.stats.gdpImpact,
+              jobsCreated: country.stats.jobsCreated,
+              tradeVolume: country.stats.tradeVolume
+            },
+            update: {
+              gdpImpact: country.stats.gdpImpact,
+              jobsCreated: country.stats.jobsCreated,
+              tradeVolume: country.stats.tradeVolume
+            }
+          }
+        }
+      },
+      create: {
         id: country.id,
         name: country.name,
         region: country.region,
-        projectCount: country.projectCount,
-        totalInvestment: country.totalInvestment,
         coordinates: country.coordinates,
+        projects: country.projects,
+        investment: country.investment,
         stats: {
           create: {
             gdpImpact: country.stats.gdpImpact,
@@ -40,81 +51,68 @@ async function main() {
     })
   }
 
-  // Inserir projetos
-  for (const project of projects) {
-    await prisma.project.create({
-      data: {
+  // Seed projects
+  for (const project of projects as Project[]) {
+    await prisma.project.upsert({
+      where: { id: project.id },
+      update: {
+        name: project.name,
+        type: project.type,
+        status: project.status,
+        value: project.value,
+        startDate: project.startDate,
+        endDate: project.endDate,
+        countryId: project.countryId
+      },
+      create: {
         id: project.id,
         name: project.name,
         type: project.type,
         status: project.status,
-        investment: project.investment,
-        startYear: project.startYear,
-        completionYear: project.completionYear || project.startYear + 5,
-        description: project.description,
-        countryId: project.location.country,
-        timeline: {
-          create: project.timeline.map(t => ({
-            year: t.year,
-            event: t.event
-          }))
-        },
-        impacts: {
-          create: [
-            {
-              type: 'economic',
-              value: typeof project.impacts.economic === 'number' ? project.impacts.economic : 0,
-              description: 'Impacto econômico do projeto'
-            },
-            {
-              type: 'social',
-              value: typeof project.impacts.social === 'number' ? project.impacts.social : 0,
-              description: 'Impacto social do projeto'
-            },
-            {
-              type: 'environmental',
-              value: typeof project.impacts.environmental === 'number' ? project.impacts.environmental : 0,
-              description: 'Impacto ambiental do projeto'
-            }
-          ]
-        }
+        value: project.value,
+        startDate: project.startDate,
+        endDate: project.endDate,
+        countryId: project.countryId
       }
     })
   }
 
-  // Inserir dados de comércio
-  for (const trade of tradeData) {
-    await prisma.tradeData.create({
-      data: {
-        year: trade.year,
-        value: trade.values.total,
-        type: trade.type || 'export',
-        region: trade.regions.asia
-      }
-    })
-  }
+  // Seed statistics
+  await prisma.statistics.upsert({
+    where: { id: 'main' },
+    update: {
+      totalInvestment: statistics.totalInvestment,
+      totalProjects: statistics.totalProjects,
+      countriesInvolved: statistics.countriesInvolved,
+      lastUpdated: statistics.lastUpdated
+    },
+    create: {
+      totalInvestment: statistics.totalInvestment,
+      totalProjects: statistics.totalProjects,
+      countriesInvolved: statistics.countriesInvolved,
+      lastUpdated: statistics.lastUpdated
+    }
+  })
 
-  // Inserir dados de investimento
-  for (const investment of investmentData) {
-    await prisma.investmentData.create({
-      data: {
-        year: investment.year,
-        value: investment.values.total,
-        sector: Object.keys(investment.sectors)[0],
-        region: Object.keys(investment.regions)[0]
-      }
-    })
-  }
-
-  // Inserir dados ambientais
-  for (const env of environmentalData) {
-    await prisma.environmentalData.create({
-      data: {
-        year: env.year,
-        type: 'emissions',
-        value: env.emissions.total,
-        description: 'Emissões totais de CO2',
-        region: env.regions.asia
+  // Seed environmental data
+  for (const data of environmentalData as EnvironmentalData[]) {
+    const id = data.id || crypto.randomUUID()
+    await prisma.environmentalData.upsert({
+      where: { id },
+      update: {
+        year: data.year,
+        type: data.type,
+        value: data.value,
+        description: data.description,
+        region: data.region
+      },
+      create: {
+        id,
+        year: data.year,
+        type: data.type,
+        value: data.value,
+        description: data.description,
+        region: data.region
       }
     })
   }

@@ -2,20 +2,16 @@
 
 import { createContext, useContext, ReactNode } from 'react'
 import { useAsyncData } from '@/hooks/useAsyncData'
-import { Country, Project, Statistics } from '@/data/types'
-import { countries, projects, statistics, DATA_VERSION } from '@/data'
+import { CountryData, Project, TradeData, InvestmentData } from '@/types/data'
+import { Statistics } from '@/data/types'
+import { countries, projects, statistics, tradeData, investmentData, DATA_VERSION } from '@/data'
 
 interface DataContextType {
-  countries: Array<{
-    id: string
-    name: string
-    region: string
-    coordinates: [number, number]
-    projects: number
-    investment: number
-  }>
+  countries: CountryData[]
   projects: Project[]
   statistics: Statistics
+  tradeData: TradeData[]
+  investmentData: InvestmentData[]
   isLoading: boolean
   error: Error | null
   version: string
@@ -32,8 +28,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     fetchFn: async () => countries,
     validation: {
       isValid: true,
-      timestamp: Date.now(),
-      version: DATA_VERSION
+      timestamp: new Date().toISOString()
     }
   })
 
@@ -45,8 +40,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     fetchFn: async () => projects,
     validation: {
       isValid: true,
-      timestamp: Date.now(),
-      version: DATA_VERSION
+      timestamp: new Date().toISOString()
     }
   })
 
@@ -58,13 +52,36 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     fetchFn: async () => statistics,
     validation: {
       isValid: true,
-      timestamp: Date.now(),
-      version: DATA_VERSION
+      timestamp: new Date().toISOString()
     }
   })
 
-  const isLoading = isLoadingCountries || isLoadingProjects || isLoadingStats
-  const error = countriesError || projectsError || statsError
+  const {
+    data: tradeDataResult,
+    isLoading: isLoadingTrade,
+    error: tradeError
+  } = useAsyncData({
+    fetchFn: async () => tradeData,
+    validation: {
+      isValid: true,
+      timestamp: new Date().toISOString()
+    }
+  })
+
+  const {
+    data: investmentDataResult,
+    isLoading: isLoadingInvestment,
+    error: investmentError
+  } = useAsyncData({
+    fetchFn: async () => investmentData,
+    validation: {
+      isValid: true,
+      timestamp: new Date().toISOString()
+    }
+  })
+
+  const isLoading = isLoadingCountries || isLoadingProjects || isLoadingStats || isLoadingTrade || isLoadingInvestment
+  const error = countriesError || projectsError || statsError || tradeError || investmentError
 
   const value = {
     countries: countryData || [],
@@ -75,6 +92,8 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
       countriesInvolved: 0,
       lastUpdated: new Date().toISOString()
     },
+    tradeData: tradeDataResult || [],
+    investmentData: investmentDataResult || [],
     isLoading,
     error,
     version: DATA_VERSION

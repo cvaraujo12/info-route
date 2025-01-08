@@ -13,9 +13,9 @@ import { ErrorMessage } from "../ui/ErrorMessage"
 import { ChartCard } from "../charts/ChartCard"
 
 export const DashboardLayout: FC = () => {
-  const { loading, error, refetchData, countries } = useData()
+  const { isLoading, error, countries } = useData()
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <LoadingSpinner size="lg" />
@@ -28,7 +28,7 @@ export const DashboardLayout: FC = () => {
       <div className="min-h-screen bg-gray-50 p-8">
         <ErrorMessage
           message={error.message}
-          onRetry={refetchData}
+          onRetry={() => window.location.reload()}
         />
       </div>
     )

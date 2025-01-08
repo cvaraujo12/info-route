@@ -2,9 +2,9 @@ export interface CountryData {
   id: string
   name: string
   region: string
-  projectCount: number
-  totalInvestment: number
   coordinates: [number, number]
+  projects: number
+  investment: number
   stats: {
     gdpImpact: number
     jobsCreated: number
@@ -17,23 +17,10 @@ export interface Project {
   name: string
   type: string
   status: string
-  investment: number
-  startYear: number
-  completionYear?: number
-  description: string
-  location: {
-    country: string
-    coordinates: [number, number]
-  }
-  timeline: {
-    year: number
-    event: string
-  }[]
-  impacts: {
-    economic: number
-    social: number
-    environmental: number
-  }
+  value: number
+  startDate: string
+  endDate?: string
+  countryId: string
 }
 
 export interface TradeData {
@@ -70,19 +57,12 @@ export interface InvestmentData {
 }
 
 export interface EnvironmentalData {
+  id: string
   year: number
-  emissions: {
-    total: number
-    byRegion: {
-      [key: string]: number
-    }
-  }
-  regions: {
-    asia: string
-    africa: string
-    europe: string
-    americas: string
-  }
+  type: string
+  value: number
+  description: string
+  region: string
 }
 
 export interface LandRoute {

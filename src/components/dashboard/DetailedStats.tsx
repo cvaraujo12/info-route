@@ -7,20 +7,20 @@ import { formatCurrency } from "@/utils/format"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 
 export const DetailedStats: FC = () => {
-  const { tradeData, investmentData, loading, error } = useData()
+  const { tradeData, investmentData, isLoading, error } = useData()
 
   if (!investmentData?.[0]) {
     return null
   }
 
-  const regionData = investmentData[0].regions.map(region => ({
-    name: region.name,
-    investimento: region.value / 1000000000
+  const regionData = Object.entries(investmentData[0].regions).map(([name, value]) => ({
+    name,
+    investimento: value / 1000000000
   }))
 
-  const sectorData = investmentData[0].sectors.map(sector => ({
-    name: sector.name,
-    valor: sector.value / 1000000000
+  const sectorData = Object.entries(investmentData[0].sectors).map(([name, value]) => ({
+    name,
+    valor: value / 1000000000
   }))
 
   return (
@@ -28,7 +28,7 @@ export const DetailedStats: FC = () => {
       <ChartCard 
         title="Investimentos por Região"
         subtitle="Em bilhões de dólares"
-        loading={loading}
+        loading={isLoading}
       >
         <div className="h-[300px]">
           <ResponsiveContainer width="100%" height="100%">
@@ -61,7 +61,7 @@ export const DetailedStats: FC = () => {
       <ChartCard 
         title="Investimentos por Setor"
         subtitle="Em bilhões de dólares"
-        loading={loading}
+        loading={isLoading}
       >
         <div className="h-[300px]">
           <ResponsiveContainer width="100%" height="100%">

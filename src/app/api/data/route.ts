@@ -1,46 +1,39 @@
 import { NextResponse } from 'next/server'
-import { prisma } from '@/lib/db'
-import type { Project } from '@/types/data'
+import { prisma } from '@/lib/prisma'
 
 export async function GET() {
   try {
-    const [projects, countries, tradeData, investmentData, environmentalData] = await Promise.all([
-      prisma.project.findMany({
-        include: {
-          country: true,
-          timeline: true,
-          impacts: true
-        }
-      }),
-      prisma.country.findMany({
-        include: {
-          stats: true
-        }
-      }),
-      prisma.tradeData.findMany(),
-      prisma.investmentData.findMany(),
-      prisma.environmentalData.findMany()
-    ])
+    const projects = await prisma.project.findMany({
+      include: {
+        country: true
+      }
+    })
 
-    const metadata = {
-      lastUpdated: new Date().toISOString(),
-      totalProjects: projects.length,
-      totalCountries: countries.length,
-      totalInvestment: projects.reduce((sum: number, project: any) => sum + project.investment, 0)
-    }
+    const countries = await prisma.country.findMany({
+      include: {
+        stats: true,
+        projectsList: true
+      }
+    })
+
+    const stats = await prisma.statistics.findFirst({
+      where: {
+        id: 'main'
+      }
+    })
+
+    const environmentalData = await prisma.environmentalData.findMany()
 
     return NextResponse.json({
       projects,
       countries,
-      tradeData,
-      investmentData,
-      environmentalData,
-      metadata
+      stats,
+      environmentalData
     })
   } catch (error) {
-    console.error('Failed to fetch data:', error)
+    console.error('API Error:', error)
     return NextResponse.json(
-      { error: 'Failed to fetch data' },
+      { error: 'Internal Server Error' },
       { status: 500 }
     )
   }

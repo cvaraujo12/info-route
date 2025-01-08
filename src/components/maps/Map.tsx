@@ -3,6 +3,7 @@
 import { FC } from "react"
 import { CountryData } from "@/types/data"
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet"
+import { formatCurrency } from "@/utils/format"
 
 interface MapProps {
   countries?: CountryData[]
@@ -10,7 +11,11 @@ interface MapProps {
 
 const Map: FC<MapProps> = ({ countries = [] }) => {
   return (
-    <div className="h-[400px] relative">
+    <div 
+      className="h-[400px] relative"
+      role="region"
+      aria-label="Mapa interativo dos países participantes"
+    >
       <MapContainer
         center={[20, 0]}
         zoom={2}
@@ -27,11 +32,21 @@ const Map: FC<MapProps> = ({ countries = [] }) => {
             position={country.coordinates}
           >
             <Popup>
-              <div className="p-2">
+              <div 
+                className="p-2"
+                role="article"
+                aria-label={`Informações sobre ${country.name}`}
+              >
                 <h3 className="font-semibold">{country.name}</h3>
                 <p className="text-sm text-gray-600">{country.region}</p>
                 <p className="text-xs text-gray-500">
-                  {country.projectCount} projetos - ${country.totalInvestment.toLocaleString()} em investimentos
+                  {country.projects} projetos - {formatCurrency(country.investment)} em investimentos
+                </p>
+                <p className="text-xs text-gray-500 mt-1">
+                  Impacto no PIB: {(country.stats.gdpImpact * 100).toFixed(1)}%
+                </p>
+                <p className="text-xs text-gray-500">
+                  Empregos gerados: {country.stats.jobsCreated.toLocaleString()}
                 </p>
               </div>
             </Popup>

@@ -1,76 +1,88 @@
 "use client"
 
 import { FC } from "react"
+import { useInView } from "react-intersection-observer"
 import { ChartCard } from "../charts/ChartCard"
 import { useData } from "@/contexts/DataContext"
 import { formatCurrency } from "@/utils/format"
-import { useInView } from "@/hooks/useInView"
-import { cn } from "@/utils/cn"
+import { motion } from "framer-motion"
+import { Project } from "@/types/data"
+
+type ProjectSorter = (a: Project, b: Project) => number
 
 export const KeyProjects: FC = () => {
-  const { projects, loading, refetchData } = useData()
-  const { ref, isInView } = useInView({ threshold: 0.1 })
+  const { projects, isLoading } = useData()
+  const { ref, inView } = useInView({ threshold: 0.1 })
+
+  const sortByValue: ProjectSorter = (a, b) => b.value - a.value
+
+  if (!projects.length) {
+    return (
+      <ChartCard
+        title="Principais Projetos"
+        subtitle="Por valor de investimento"
+        loading={isLoading}
+      >
+        <div className="p-4 text-center text-gray-500">
+          Nenhum projeto encontrado
+        </div>
+      </ChartCard>
+    )
+  }
 
   const topProjects = projects
-    .sort((a, b) => b.investment - a.investment)
+    .sort(sortByValue)
     .slice(0, 5)
 
   return (
-    <ChartCard 
+    <ChartCard
       title="Principais Projetos"
       subtitle="Por valor de investimento"
-      loading={loading}
-      onRefresh={refetchData}
-      expandable
+      loading={isLoading}
     >
       <div 
-        ref={ref}
+        ref={ref} 
         className="space-y-4"
+        role="list"
+        aria-label="Lista dos 5 principais projetos"
       >
         {topProjects.map((project, index) => (
-          <div 
+          <motion.div
             key={project.id}
-            className={cn(
-              "bg-gray-50 p-4 rounded-lg hover:bg-gray-100 transition-all",
-              "transform opacity-0",
-              isInView && "animate-fade-in opacity-100"
-            )}
-            style={{ 
-              animationDelay: `${index * 100}ms`,
-              transitionDelay: `${index * 50}ms`
-            }}
-            role="article"
+            initial={{ opacity: 0, y: 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
+            className="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow"
+            role="listitem"
             aria-label={`Projeto: ${project.name}`}
-            tabIndex={0}
           >
             <div className="flex justify-between items-start">
               <div>
-                <h3 className="font-semibold text-lg">{project.name}</h3>
-                <p className="text-sm text-gray-600">{project.location.country}</p>
-                <p className="text-xs text-gray-500 mt-1">
-                  {project.startYear} - {project.completionYear || 'Em andamento'}
-                </p>
+                <h3 className="font-medium text-gray-900">{project.name}</h3>
+                <p className="text-sm text-gray-500">{project.type}</p>
               </div>
-              <div className="text-right">
-                <div className="font-bold text-primary-900">
-                  {formatCurrency(project.investment)}
-                </div>
-                <span className={cn(
-                  'px-2 py-1 rounded-full text-xs',
-                  {
-                    'bg-green-100 text-green-800': project.status === 'completed',
-                    'bg-blue-100 text-blue-800': project.status === 'ongoing',
-                    'bg-yellow-100 text-yellow-800': project.status === 'planned'
-                  }
-                )}>
-                  {project.status}
-                </span>
-              </div>
+              <span 
+                className="text-sm font-medium text-gray-900"
+                aria-label={`Valor: ${formatCurrency(project.value)}`}
+              >
+                {formatCurrency(project.value)}
+              </span>
             </div>
-            <p className="mt-2 text-sm text-gray-600 line-clamp-2">
-              {project.description}
-            </p>
-          </div>
+            <div className="mt-2 flex justify-between items-center">
+              <span 
+                className="text-xs text-gray-500"
+                aria-label={`Status: ${project.status}`}
+              >
+                Status: {project.status}
+              </span>
+              <span 
+                className="text-xs text-gray-500"
+                aria-label={`Data de início: ${new Date(project.startDate).toLocaleDateString()}`}
+              >
+                Início: {new Date(project.startDate).toLocaleDateString()}
+              </span>
+            </div>
+          </motion.div>
         ))}
       </div>
     </ChartCard>

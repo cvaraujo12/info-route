@@ -20,30 +20,30 @@ export function useDataVisualization(
     const regions = new Map<string, number>()
     countries.forEach(country => {
       const current = regions.get(country.region) || 0
-      regions.set(country.region, current + country.projectCount)
+      regions.set(country.region, current + country.projects)
     })
     return Array.from(regions.entries()).map(([name, value]) => ({ name, value }))
   }, [countries])
 
   const investmentByYear = useMemo(() => {
     return investmentData
-      .map(data => ({ year: data.year, value: data.total }))
+      .map(data => ({ year: data.year, value: data.values.total }))
       .sort((a, b) => a.year - b.year)
   }, [investmentData])
 
   const topCountries = useMemo(() => {
     return [...countries]
-      .sort((a, b) => b.totalInvestment - a.totalInvestment)
+      .sort((a, b) => b.investment - a.investment)
       .slice(0, 5)
   }, [countries])
 
   const completionRate = useMemo(() => {
     const completed = projects.filter(p => p.status === 'completed').length
-    return (completed / projects.length) * 100
+    return projects.length ? (completed / projects.length) * 100 : 0
   }, [projects])
 
   const totalInvestment = useMemo(() => {
-    return projects.reduce((sum, project) => sum + project.investment, 0)
+    return projects.reduce((sum, project) => sum + project.value, 0)
   }, [projects])
 
   const activeProjects = useMemo(() => {
