@@ -4,12 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write .",
     "prepare": "husky install",
-    "vercel-build": "echo 'Installing dependencies...' && npm install && echo 'Generating Prisma Client...' && npx prisma generate && echo 'Running migrations...' && npx prisma migrate deploy && echo 'Building Next.js...' && next build",
     "postinstall": "prisma generate"
   },
   "dependencies": {

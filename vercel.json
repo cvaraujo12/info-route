@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "NODE_ENV=production npm run vercel-build",
+  "buildCommand": "npm run build",
   "devCommand": "npm run dev",
   "installCommand": "npm install",
   "framework": "nextjs",
@@ -14,14 +14,7 @@
     "NEXT_PUBLIC_API_URL": "production-url",
     "PRISMA_SKIP_POSTINSTALL": "1",
     "NPM_CONFIG_LEGACY_PEER_DEPS": "true",
-    "NPM_CONFIG_PACKAGE_LOCK": "false",
-    "NODE_ENV": "production",
-    "DEBUG": "*"
-  },
-  "build": {
-    "env": {
-      "NODE_OPTIONS": "--max-old-space-size=4096"
-    }
+    "NODE_ENV": "production"
   },
   "headers": [
     {
